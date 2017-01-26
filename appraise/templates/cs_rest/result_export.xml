@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{% if tasks %}<cs_rest-results>
+
+{% for task in tasks %}{{task}}
+{% endfor %}</cs_rest-results>
+{% else %}<cs_rest-results />
+{% endif %}

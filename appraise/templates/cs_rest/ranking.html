@@ -1,0 +1,241 @@
+{% extends "cs_rest/base.html" %}
+
+{% block head %}
+<script src="{{STATIC_URL}}js/jquery-2.1.4.min.js"></script>
+<script>
+<!--
+function format_das()
+{
+  var src = document.getElementById('source-data');
+  var text = src.innerHTML;
+  text = text.replace(/: /g, ':<br/>&nbsp;&nbsp;&nbsp;&nbsp;');
+  text = text.replace(/, /g, ',<br/>&nbsp;&nbsp;&nbsp;&nbsp;');
+  src.innerHTML = text;
+}
+
+$(document).ready(function() {
+  $('input[name="start_timestamp"]').val(Date.now()/1000.0);
+  format_das();
+});
+function add_end_timestamp()
+{
+  $('input[name="end_timestamp"]').val(Date.now()/1000.0);
+}
+
+function reset_form()
+{
+  $('#translations input[type="radio"]').removeAttr('checked');
+  $('input[name="start_timestamp"]').val(Date.now()/1000.0);
+  $('.label-rank-1').each(function(){updateColors(this)});
+}
+
+function validate_form()
+{
+  var checked = $('#translations input[type="radio"]:checked').length;
+
+  if (checked != {{translations|length}}) {
+    alert('Prosím, dejte nějaké pořadí všem větám.');
+    return false;
+  }
+
+  return true;
+}
+
+
+var colors = ['#c6e4a3', '#d8e49d', '#e5db97', '#e5c290', '#e5a58a' ]; // red: e68484, green: b7e4aa
+var hl_colors = ['#3e7200', '#728900', '#a08c00', '#b76a00', '#ce3c00' ];
+var animating = false; // global: are we currently animating ??
+var animLen = 300;  // row swapping animation duration
+
+// check whether we need to swap some more in the given direction
+function getRowToSwap(myRow, dir){
+    var rows = $('.transl');
+    var ranks = $.map(rows, function(el){ 
+        var selInput = $(el).find('input:checked');
+        if (selInput.length){
+            var cls = $(selInput[0]).closest('.label').attr('class'); 
+            return 1 * cls.charAt(cls.length - 1);
+        }
+        return rows.length + 1;
+    });
+    var myPos = $.inArray(myRow, rows);
+    if (myPos + dir < 0 || myPos + dir >= ranks.length){
+        return null;
+    }
+    if (dir * ranks[myPos] > dir * ranks[myPos + dir]){
+        return rows[myPos + dir];
+    }
+}
+
+// swap two adjacent translation rows
+function swapRows(myRow, otherRow, dir){
+
+    animating = true;  // global
+
+    $.when($(myRow).animate({top: dir * $(otherRow).outerHeight()}, animLen), 
+           $(otherRow).animate({top: (-dir) * $(myRow).outerHeight()}, animLen)
+    ).done(function () {
+        $(myRow).css('top', '0px');
+        $(otherRow).css('top', '0px');
+        if (dir == -1){
+            $(myRow).insertBefore(otherRow);
+        }
+        else {
+            $(otherRow).insertBefore(myRow);
+        }
+        if (otherRow = getRowToSwap(myRow, dir)){
+            swapRows(myRow, otherRow, dir);  // move further
+        }
+        else {
+            animating = false;  // we're done
+        }
+    });
+}
+
+// after user clicks an item, this updates the view
+function updateColorsAndOrder(labelElem){
+    updateColors(labelElem);
+    updateOrder(labelElem);
+}
+
+// highlighting the right color
+function updateColors(labelElem){
+    $(labelElem).closest('.transl').find('.label').each(function(){
+        var cssClass = $(this).attr('class');
+        var ord = cssClass.charAt(cssClass.length - 1);
+        if (!isNaN(ord)){
+            if ($(this).children('input:checked').length){
+                $(this).css('background-color', hl_colors[ord - 1]);
+                $(this).css('color', 'white');
+            }
+            else {
+                $(this).css('background-color', colors[ord - 1]);
+                $(this).css('color', 'gray');
+            }
+        }
+    });
+}
+
+// moving stuff around
+function updateOrder(labelElem){
+    if (animating){ // delay executing when there's animation in progress already
+        setTimer(function(){ updateOrder(labelElem); }, animLen + 10);
+        return;
+    }
+    var myRow = $(labelElem).closest('.transl')[0];
+    if (otherRow = getRowToSwap(myRow, -1)){
+        swapRows(myRow, otherRow, -1);
+    }
+    else if (otherRow = getRowToSwap(myRow, 1)){
+        swapRows(myRow, otherRow, 1);
+    }
+} 
+-->
+</script>
+<style type="text/css">
+.label-best { background-color: #175C00; }
+.label-rank-1 { background-color: #c6e4a3; color: gray; }
+.label-rank-2 { background-color: #d8e49d; color: gray; }
+.label-rank-3 { background-color: #e5db97; color: gray; }
+.label-rank-4 { background-color: #e5c290; color: gray; }
+.label-rank-5 { background-color: #e5a58a; color: gray; }
+.label-worst { background-color: #E50000; }
+
+#transl-container { 
+    position: relative; 
+}
+.transl { 
+    border: 1px solid #ccc;
+    background-color:  #eee;
+    padding: 0.1em;
+    margin-bottom: 0.5em; 
+    position: relative;
+}
+.transl .text { margin-top: -0.2em; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!--
+<div class="alert alert-info">
+  <table style="width:100%">
+  <tr>
+    <td style="width:33%;text-align:left;">
+      <strong id="task_progress">{{task_progress}}</strong>
+    </td>
+    <td style="width:33%;text-align:center;">
+      <strong>Sentence #{{sentence_id}}</strong>
+    </td>
+    <td style="width:33%;text-align:right;">
+      <strong>{{language_pair}}</strong>
+    </td>
+  </tr>
+  </table>
+</div>
+//-->
+
+<div class="row">
+{% if reference_text.1 %}
+<div class="col-sm-5">
+<blockquote>
+<p><strong id="source-data">{{source_text.1}}</strong></p>
+<small>Zdrojová data</small>
+</blockquote>
+</div>
+<div class="col-sm-5 col-sm-offset-1">
+<blockquote>
+<p>{{reference_text.1}}</strong></p>
+<small>Referenční věta</small>
+</blockquote>
+</div>
+{% else %}
+<div class="col-sm-12">
+<blockquote>
+<p>{% if source_text.0 %}{{source_text.0}} {% endif %}<strong>{{source_text.1}}</strong>{% if source_text.2 %} {{source_text.2}}{% endif %}</p>
+<small>Zdrojová data</small>
+</blockquote>
+</div>
+{% endif %}
+</div>
+
+<form action="{{action_url}}" method="post" onsubmit="javascript:add_end_timestamp();">
+
+<input name="end_timestamp" type="hidden" value="" />
+<input name="item_id" type="hidden" value="{{item_id}}" />
+<input name="start_timestamp" type="hidden" value="" />
+<input name="order" type="hidden" value="{{order}}" />
+
+<div id="instructions">
+    Prosím, seřaďte vygenerované věty níže od nejlepší po nejhorší (s přihlédnutím k referenční větě nahoře).<br/>
+    Můžete přisoudit shodné pořadí i několika větám.
+</div>
+<span id="translations">
+<div class="row">
+<div class="col-sm-12">
+<blockquote id="transl-container">
+
+{% for translation in translations %}
+{% with forloop.counter0 as rank_id %}
+<div class="transl" id="transl-{{forloop.counter}}">
+{% include 'cs_rest/rank_selector.html' %}
+{% endwith %}
+<p class="text"><strong>{{translation.0}}</strong></p>
+<!--<small>Translation {{forloop.counter}}</small>-->
+</div>
+{% endfor %}
+</blockquote>
+</div>
+</div>
+</span>
+
+<div class="actions">
+<button class="btn btn-primary" name="submit_button" accesskey="1" type="submit" value="SUBMIT" onclick="javascript:return validate_form();"><i class="icon-ok-sign icon-white"></i> Odeslat</button>
+&nbsp;
+<button onclick="javascript:reset_form();" accesskey="2" type="reset" class="btn"><i class="icon-repeat"></i> Zresetovat hodnocení</button>
+&nbsp;
+<button name="submit_button" accesskey="3" type="submit" class="btn" value="FLAG_ERROR"><i class="icon-white icon-exclamation-sign"></i> Přeskočit tuto větu</button>
+</div>
+
+</form>
+
+{% endblock %}

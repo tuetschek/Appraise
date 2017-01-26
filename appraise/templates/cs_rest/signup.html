@@ -1,0 +1,190 @@
+﻿{% extends "base.html" %}
+
+{% block head %}
+<script src="{{STATIC_URL}}js/jquery-2.1.4.min.js"></script>
+<script>
+<!--
+function register_groups()
+{
+  document.getElementById('id_projects').value = 'CS_REST';
+  document.getElementById('div_projects').className += " hidden_by_js";
+  document.getElementById('id_languages').value = '2ces';
+  document.getElementById('div_languages').className += " hidden_by_js";
+}
+
+function getXMLHttpRequest() {
+
+    if (window.XDomainRequest) { // IE8
+        return new window.XDomainRequest();
+    }
+    else if (window.XMLHttpRequest) {
+        return new window.XMLHttpRequest;
+    }
+    else {
+        try {
+            return new ActiveXObject("MSXML2.XMLHTTP.3.0");
+        }
+        catch(ex) {
+            return null;
+        }
+    }
+}
+
+function getCode(){
+    request = getXMLHttpRequest();
+    if (request){
+        var url = 'http://ufallab.ms.mff.cuni.cz/~odusek/Appraise-codes/index.php';
+        request.open('POST', url, false);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send("getcode=1");
+        if (request.status == 200){
+            var token = request.responseText.replace(/.*: /, '');
+            document.getElementById('id_token').value = token;
+            //document.getElementById('id_token').disabled = 'disabled';
+            document.getElementById('div_token').className += ' hidden_by_js';
+            return;
+        }
+    }
+    document.getElementById('div_token').innerHTML = 'Bohužel se nepodařilo získat přístupový kód. Napište prosím Ondřejovi.';
+}
+
+$(document).ready(function() {
+  register_groups();
+  getCode();
+});
+-->
+</script>
+<style type="text/css">
+.hidden_by_js, .hidden_by_js .col-sm-4 {/* #div_languages, #div_projects, #div_projects .col-sm-4, #div_languages .col-sm-4 { */
+    visibility: hidden;
+    height: 1px;
+    width: 1px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {% if 'invalid_username' in errors %}
+    <p><strong>Upozornění</strong> Uživatelské jméno je prázdné, nebo takové už existuje. Prosím, zvolte si jiné uživatelské jméno.</p>
+    {% elif 'invalid_password' in errors %}
+    <p><strong>Upozornění</strong> Neplatné nebo prázdné heslo. Prosím, zvolte si nějaké heslo.</p>
+    {% elif 'invalid_email' in errors %}
+    <p><strong>Upozornění</strong> Neplatná nebo chybějící e-mailová adresa. Prosím, zadejte svou e-mailovou adresu. Slibuju, že ji nikomu nedám.</p>
+    {% elif 'invalid_token' in errors %}
+    <p><strong>Upozornění</strong> Neplatný přístupový kód. Zkuste si prosím obstarat kód <a href="http://ufallab.ms.mff.cuni.cz/~odusek/Appraise-codes/index.php">zde</a>, nebo dejte vědět Ondřejovi.</p>
+    {% elif 'invalid_languages' in errors %}
+    <p><strong>Upozornění</strong> Neplatná volba jazyka. Prosím, zvolte si češtinu.</p>
+    {% else %}
+    <p><strong>Upozornění</strong> Něco je špatně. Napište prosím Ondřejovi.</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div class="page-header">
+    <h1>Registrace k hodnocení vygenerovaných vět o restauracích CS_REST</h1>
+    <p>Prosím, vyberte si uživatelské jméno a heslo, zadejte svou e-mailovou adresu a přístupový kód.</p>
+
+    <div class="panel panel-primary" style="margin-top: 20px;">
+      <!-- <div class="panel-heading">
+        <h3 class="panel-title"><strong>Poznámka</strong></h3>
+      </div>
+      <div class="panel-body">
+        <p>Každý přístupový kód lze pro registraci použít jen jednou. Pokud se všechno povede, systém vás přihlásí a budete moct začít hodnotit. Pokud ne, dostanete chybovou hlášku.</p>
+      </div>-->
+    </div>
+  </div>
+  <form class="form-horizontal" method="post" action="{% url appraise.cs_rest.views.signup %}">
+  {% csrf_token %}
+
+    <div class="form-group">
+      <label for="id_username" class="col-sm-4 control-label">Uživatelské jméno</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <input class="form-control" name="username" id="id_username" type="text" size="30" value="{% if username %}{{username}}{% endif %}" aria-describedby="helpUsername" />
+        </div>
+        <span id="helpUsername" class="help-block">Prosím, vyberte si nějaké uživatelské jméno a zadejte ho sem.</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="id_password" class="col-sm-4 control-label">Heslo</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <input class="form-control" name="password" id="id_password" type="text" size="30" value="" aria-describedby="helpPassword" />
+        </div>
+        <span id="helpPassword" class="help-block">Prosím, zvolte si heslo a zadejte ho sem.</span>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="id_email" class="col-sm-4 control-label">E-mail</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <input class="form-control" name="email" id="id_email" type="text" size="30" value="{% if email %}{{email}}{% endif %}" aria-describedby="helpEmail" />
+        </div>
+        <span id="helpEmail" class="help-block">Sem, prosím, zadejte svou e-mailovou adresu.</span>
+      </div>
+    </div>
+
+    <div class="form-group" id="div_token">
+      <label for="id_token" class="col-sm-4 control-label">Přístupový kód</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <input class="form-control" name="token" id="id_token" type="text" size="30" value="{% if token %}{{token}}{% endif %}" aria-describedby="helpToken" />
+        </div>
+        <span id="helpToken" class="help-block">A sem zadejte svůj přístupový kód.</span>
+      </div>
+    </div>
+
+    <div class="form-group" id="div_projects">
+      <label for="id_projects" class="col-sm-4 control-label">Projekty</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <select class="form-control" name="projects" id="id_projects" multiple="multiple">
+          {% for project in project_choices %}
+            <option {% if project in project_status %}selected="selected"{% endif %}value="{{project}}">{{project}}</option>
+          {% endfor%}
+          </select>
+        </div>
+        <span id="helpProjects" class="help-block">Zvolte si prosím projekt CS_REST pro evaluaci.</span>
+      </div>
+    </div>
+
+    <div class="form-group" id="div_languages">
+      <label for="id_languages" class="col-sm-4 control-label">Jazyky</label>
+      <div class="col-sm-4">
+        <div class="input-group">
+          <div class="input-group-addon">povinné</div>
+          <select class="form-control" name="languages" id="id_languages" multiple="multiple">
+            <option {% if '2ces' in languages %}selected="selected"{% endif %}value="2ces">Czech (Čeština)</option>
+          </select>
+        </div>
+        <span id="helpLanguages" class="help-block">Zvolte si prosím češtinu.</span>
+      </div>
+    </div>
+
+    <button type="submit" class="col-sm-offset-4 btn btn-primary">Zaregistrovat se</button>
+
+  </form>
+{% endblock %}
+
+{% block actions %}
+    <script>
+  {% if focus_input %}
+      // Set focus to given input
+      $('#{{ focus_input }}').focus();
+  {% else %}
+      // by default, set focus on username input
+      $('#id_username').focus();
+  {% endif %}
+    </script>
+{% endblock %}
