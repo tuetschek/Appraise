@@ -2,7 +2,7 @@ Appraise
 ========
 
 This is my own fork of [Appraise](http://github.com/cfedermann/Appraise) used to evaluate Czech NLG. 
-Everything still works as in the original, so please refer to the [README file there](https://github.com/tuetschek/Appraise/blob/master/README.md).
+Everything still works as in the original, so please refer to the [README file there](https://github.com/cfedermann/Appraise/blob/master/README.md).
 
 My changes
 ----------
