@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from xml.sax.saxutils import escape
+
 class RankingTask:
     # Patched to work with unicode strings which are produced upstream.
     def __init__(self):
@@ -11,10 +13,12 @@ class RankingTask:
 
     def __init__(self, id, source, ref, names, outputs):
         self.id = id
-        self.source = source
-        self.reference = ref
+        self.source = escape(source) if source else '-'
+        self.reference = escape(ref) if ref else '-'
         self.system_names = names
-        self.system_outputs = outputs
+        self.system_outputs = []
+        for output in outputs:
+            self.system_outputs.append(escape(output) if output else '-')
 
     def attr(self):
         return u''
