@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style type="text/css">
+#eval_steps li {
+    font-size: 120%;
+    padding-bottom: 0.5em;
+}
+#eval_steps li li {
+    padding-top: 0.3em;
+    padding-bottom: 0.1em;
+    font-size: 100%;
+}
+</style>
+{% endblock %}
 {% block content %}
 {% if message %}
   <div class="alert alert-warning alert-dismissible" role="alert">
@@ -9,24 +22,34 @@
 {% endif %}
 
   <div class="jumbotron">
-    <h1><strong>Welcome to Appraise!</strong></</h1>
-    <h3><strong>An open-source system for manual evaluation of MT output</strong></h3>
+    <h1><strong>Vítejte v Appraise!</strong></h1>
+    <h3><strong>Hodnocení vygenerovaných textů</strong></h3>
 
     <div class="panel panel-primary" style="margin-top: 20px;">
       <div class="panel-heading">
-        <h3 class="panel-title"><strong>This is Appraise</strong></h3>
+        <h3 class="panel-title"><strong>Hodnocení v Appraise</strong></h3>
       </div>
       <div class="panel-body">
-        <p><small>It supports collaborative collection of human feedback for MT evaluation. It implements tasks such as <em>Translation Quality Checking</em>, <em>Ranking and Error Classification</em>, and <em>Manual Post-Editing</em>.</small></p>
+<p><small>Appraise je nástroj pro hodnocení automatického překladu. Já ho používám pro vyhodnocení generátoru jazyka – předmětu své disertace. Hodnocení funguje na základě porovnávání přeložených/vygenerovaných vět – jen seřadíte několik podobných vět od nejlepší po nejhorší.</small></p>
+<h3>Postup hodnocení</h3>
+<ol id="eval_steps">
+    <!-- <li>Vyzvedněte si přístupový kód – <a href="http://ufallab.ms.mff.cuni.cz/~odusek/Appraise-codes/index.php">klikněte sem</a>.</li>-->
+<li><a href="{% url appraise.cs_rest.views.signup %}">Zaregistrujte se</a>. Jméno a e-mail si můžete i vymyslet, ale pak se vám nebudu moct nijak odměnit.</li>
+<li>Po registraci se vám hned ukáže seznam, kde bude jen jeden „Blok úkolů“. Klikněte na něj a můžete začít hodnotit. V každém úkolu jsou tři sady vět k hodnocení.</li>
+<li>Při hodnocení <strong>seřadíte</strong> několik podobných vět <strong>od nejlepší k nejhorší</strong>. <ul><li>Můžete (ale nemusíte) se přitom dívat na zdrojová data generátoru i referenční větu.</li><li>Pokud vám některé věty připadají stejně dobré, <strong>můžete jim dát shodné pořadí.</strong></li><li>Příliš o tom ale nepřemýšlejte – seřazení jedné sady vět by Vám nemělo zabrat víc než minutu nebo dvě.</li></ul></li><li>Po seřazení sady vět klikněte na „Odeslat“ a tím se dostanete na další sadu.</li>
+</ol>
+<p><small>Věty jednoduchým způsobem popisují restaurace (kuchyně, ceny, místo atp.). Informace v nich jsou smyšlené, ale „pravdu“ pro danou větu vidíte nahoře ve zdrojových datech a referenční větě.</small></p>
+<p><small>Úkolů jsou k dispozici stovky, ale i splněním jednoho mi pomůžete s disertací. Jeden úkol by Vám měl zabrat 3–5 minut. Pokud splníte aspoň 10 úkolů, máte u mě pivo nebo čokoládu. Nejpilnější hodnotitele čeká ještě další odměna.</small></p>
+<p><small>Ondřej (odusek * ufal.mff.cuni.cz)</small></p>
       </div>
     </div>
 
     <div class="col-md-12 col-md-offset-1">
       <div class="col-md-5">
-        <a class="btn btn-default btn-lg btn-block" href="{% url appraise.wmt16.views.overview %}" role="button">Access WMT16 evaluation &raquo;</a>
+        <a class="btn btn-default btn-lg btn-block" href="{% url appraise.cs_rest.views.overview %}" role="button">Začít hodnotit &raquo;</a>
       </div>
       <div class="col-md-5">
-        <a class="btn btn-primary btn-lg btn-block" href="{% url appraise.wmt16.views.signup %}" role="button">Sign up for WMT16 &raquo;</a>
+        <a class="btn btn-primary btn-lg btn-block" href="{% url appraise.cs_rest.views.signup %}" role="button">Zaregistrovat se &raquo;</a>
       </div>
     </div>
     
