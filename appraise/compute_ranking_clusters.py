@@ -18,7 +18,7 @@ if __name__ == "__main__":
     os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
     PROJECT_HOME = os.path.normpath(os.getcwd() + "/..")
     sys.path.append(PROJECT_HOME)
-    
+
     # We have just added appraise to the system path list, hence this works.
-    from appraise.wmt16.views import update_ranking
+    from appraise.cs_rest.views import update_ranking
     update_ranking()

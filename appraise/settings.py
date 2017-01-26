@@ -104,7 +104,7 @@ if DJANGO_VERSION[1] < 4:
 
 # The absolute path to the directory where collectstatic will collect static
 # files for deployment.
-STATIC_ROOT = os.path.join(ROOT_PATH, '/static-files/')
+STATIC_ROOT = os.path.join(ROOT_PATH, 'static-files/')
 
 # URL to use when referring to static files located in STATIC_ROOT.
 STATIC_URL = '/{0}files/'.format(DEPLOYMENT_PREFIX)
@@ -155,5 +155,5 @@ INSTALLED_APPS = (
   'django.contrib.admin',
   'django.contrib.messages',
 
-  'appraise.wmt16',
+  'appraise.cs_rest',
 )
