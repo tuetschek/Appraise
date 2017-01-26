@@ -12,6 +12,7 @@ My changes
 * Interface translated into Czech
 * Invite codes are retrieved automatically via JS
 * Assignment to groups automatically via JS
+* Source-side formatting
 
 
 ### General
@@ -22,4 +23,4 @@ My changes
 * `views.py` (both general and under `cs_rest`) now use 
   `from __future__ import unicode_literals` to prevent crashes if users create
   usernames with accented characters
-
+* Less confusing buttons layout in ranking
