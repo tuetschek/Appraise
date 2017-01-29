@@ -10,6 +10,7 @@ from django.contrib.auth.views import login as LOGIN, logout as LOGOUT
 from django.contrib.auth.views import password_change as PASSWORD_CHANGE
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, render_to_response
+from django.views.static import serve
 from appraise.settings import LOG_LEVEL, LOG_HANDLER, COMMIT_TAG, STATIC_URL
 
 # Setup logging support.

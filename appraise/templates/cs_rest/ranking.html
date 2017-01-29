@@ -11,6 +11,7 @@ function format_das()
   text = text.replace(/: /g, ':<br/>&nbsp;&nbsp;&nbsp;&nbsp;');
   text = text.replace(/, /g, ',<br/>&nbsp;&nbsp;&nbsp;&nbsp;');
   src.innerHTML = text;
+  $(src).closest('p').css('line-height', '115%');
 }
 
 $(document).ready(function() {
@@ -130,6 +131,10 @@ function updateOrder(labelElem){
         swapRows(myRow, otherRow, 1);
     }
 } 
+
+function showInstrImg(param){
+    $('#instr-img-bg').css({'display': param ? 'block' : 'none'});
+}
 -->
 </script>
 <style type="text/css">
@@ -152,6 +157,39 @@ function updateOrder(labelElem){
     position: relative;
 }
 .transl .text { margin-top: -0.2em; }
+#instr-img img {
+    height: 100%;
+}
+#instr-img-x {
+    position: absolute;
+    top: 0;
+    right: 0.2em;
+    z-index: 10;
+    font-weight: bold;
+    font-size: 150%;
+}
+#instr-img { 
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    height: 85%;
+    width: 90%;
+    z-index: 11;
+    background-color: white;
+    border: 1px solid gray;
+    text-align: center;
+}
+#instr-img-bg {
+    display: none; 
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+    opacity: rgba(128, 128, 128, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9;
+}
 </style>
 {% endblock %}
 
@@ -184,7 +222,7 @@ function updateOrder(labelElem){
 </div>
 <div class="col-sm-5 col-sm-offset-1">
 <blockquote>
-<p>{{reference_text.1}}</strong></p>
+<p><strong>{{reference_text.1}}</strong></p>
 <small>Referenční věta</small>
 </blockquote>
 </div>
@@ -207,7 +245,8 @@ function updateOrder(labelElem){
 
 <div id="instructions">
     Prosím, seřaďte vygenerované věty níže od nejlepší po nejhorší (s přihlédnutím k referenční větě nahoře).<br/>
-    Můžete přisoudit shodné pořadí i několika větám.
+    Můžete přisoudit shodné pořadí i několika větám. (<a href="#" onclick="showInstrImg(true);">Podrobnosti</a>)
+    <div id="instr-img-bg" onclick="showInstrImg(false);"><div id="instr-img"><div id="instr-img-x"><a href="#">X</a></div><img src="{{ MEDIA_URL }}/cs_rest/ranking_example.png" alt="Příklad" /></div></div>
 </div>
 <span id="translations">
 <div class="row">

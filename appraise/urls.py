@@ -23,6 +23,7 @@ urlpatterns = patterns('appraise.views',
   (r'^{0}logout/$'.format(DEPLOYMENT_PREFIX), 'logout', {'next_page': '/{0}'.format(DEPLOYMENT_PREFIX)}),
   (r'^{0}password/$'.format(DEPLOYMENT_PREFIX), 'password_change', {'template_name': 'password_change.html'}),
   (r'^{0}admin/'.format(DEPLOYMENT_PREFIX), include(admin.site.urls)),
+  (r'^{0}media/(?P<path>.*)$'.format(DEPLOYMENT_PREFIX), 'serve', {'document_root': MEDIA_ROOT}),
 )
 
 # Patterns for "cs_rest" app.
