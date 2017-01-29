@@ -10,9 +10,11 @@ My changes
 ### Czech NLG specific
 
 * Interface translated into Czech
+* Instructions on the intro page
+    * Incl. an overlay example image
 * Invite codes are retrieved automatically via JS
 * Assignment to groups automatically via JS
-* Source-side formatting
+* Source (dialogue act) formatting
 
 
 ### General
