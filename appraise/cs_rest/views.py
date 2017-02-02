@@ -47,6 +47,7 @@ BASE_CONTEXT = {
 # We keep status and ranking information available in memory to speed up
 # access and avoid lengthy delays caused by computation of this data.
 STATUS_CACHE = {}
+STATUS_TIMESTAMP = datetime.fromtimestamp(0)
 RANKINGS_CACHE = {}
 
 # Initalized database
@@ -508,16 +509,20 @@ def status(request):
     LOGGER.info('Rendering CS_REST HIT status for user "{0}".'.format(
       request.user.username or "Anonymous"))
 
-    if not STATUS_CACHE.has_key('global_stats'):
+    now = datetime.now()
+    cache_old = (now - STATUS_TIMESTAMP).total_seconds() > 3600
+    LOGGER.info("Cache age: %f %s" % ((now - STATUS_TIMESTAMP).total_seconds(), str(cache_old)))
+
+    if not STATUS_CACHE.has_key('global_stats') or cache_old:
         update_status(key='global_stats')
 
-    if not STATUS_CACHE.has_key('language_pair_stats'):
+    if not STATUS_CACHE.has_key('language_pair_stats') or cache_old:
         update_status(key='language_pair_stats')
 
-    if not STATUS_CACHE.has_key('group_stats'):
+    if not STATUS_CACHE.has_key('group_stats') or cache_old:
         update_status(key='group_stats')
 
-    if not STATUS_CACHE.has_key('user_stats'):
+    if not STATUS_CACHE.has_key('user_stats') or cache_old:
         update_status(key='user_stats')
 
     # Compute admin URL for super users.
@@ -583,6 +588,9 @@ def update_status(request=None, key=None):
             # Only show top 25 contributors.
             user_stats = _compute_user_stats()
             STATUS_CACHE[status_key] = user_stats[:25]
+
+    global STATUS_TIMESTAMP
+    STATUS_TIMESTAMP = datetime.now()
 
     if request is not None:
         return HttpResponse('Status updated successfully')
