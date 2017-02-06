@@ -270,19 +270,23 @@ sub process_judgment {
   my ($task,$DATA,$WIN,$TOTAL) = @_;
   for(my $i=1; $i<5; $i++) {
     for(my $j=$i+1; $j<=5; $j++) {
-      my $system1 = &clean_up_system_name($$DATA[$INDEX{"system${i}Id"}]);
-      my $system2 = &clean_up_system_name($$DATA[$INDEX{"system${j}Id"}]);
+      my $systems1 = &clean_up_system_name($$DATA[$INDEX{"system${i}Id"}]);
+      my $systems2 = &clean_up_system_name($$DATA[$INDEX{"system${j}Id"}]);
       my $rank1 = $$DATA[$INDEX{"system${i}rank"}];
       my $rank2 = $$DATA[$INDEX{"system${j}rank"}];
       next unless $rank1 != $rank2;
-      if ($rank1 < $rank2) {
-        $$WIN{$task}{$system1}{$system2}++;
+      foreach my $system1 (split /\+/, $systems1){
+        foreach my $system2 (split /\+/, $systems2){
+          if ($rank1 < $rank2) {
+            $$WIN{$task}{$system1}{$system2}++;
+          }
+          else {
+            $$WIN{$task}{$system2}{$system1}++;
+          }
+          $$TOTAL{$task}{$system1}{$system2}++;
+          $$TOTAL{$task}{$system2}{$system1}++;
+        }
       }
-      else {
-        $$WIN{$task}{$system2}{$system1}++;
-      }
-      $$TOTAL{$task}{$system1}{$system2}++;
-      $$TOTAL{$task}{$system2}{$system1}++;
     }
   }
 }
